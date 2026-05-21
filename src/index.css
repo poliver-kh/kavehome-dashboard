@@ -1,0 +1,24 @@
+@font-face { font-family: 'KaveHaffer'; src: url('/KaveHafferText-Regular.otf'); font-weight: 400; }
+@font-face { font-family: 'KaveHaffer'; src: url('/KaveHafferText-Medium.otf'); font-weight: 500; }
+@font-face { font-family: 'KaveHaffer'; src: url('/KaveHafferText-SemiBold.otf'); font-weight: 600; }
+@font-face { font-family: 'KaveHaffer'; src: url('/KaveHafferText-Bold.otf'); font-weight: 700; }
+@font-face { font-family: 'KaveHaffer'; src: url('/KaveHafferText-Black.otf'); font-weight: 900; }
+
+:root {
+  --black:   #000000;
+  --white:   #FFFFFF;
+  --cream:   #F2F1E7;
+  --sand:    #DAD4C7;
+  --taupe:   #BDAFA0;
+  --rust:    #A9431E;
+  --bg:      #0a0b08;
+  --surface: rgba(242,241,231,0.03);
+  --border:  rgba(242,241,231,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--cream); font-family: 'KaveHaffer', system-ui, sans-serif; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(242,241,231,0.1); border-radius: 4px; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
