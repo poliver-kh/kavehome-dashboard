@@ -1,6 +1,70 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
+const AUTH_USER = "mktperformance";
+const AUTH_PASS = "KaveHomePRF2026!";
+const AUTH_KEY  = "kh_auth";
+
+function LoginScreen({ onLogin }) {
+  const [user, setUser]   = useState("");
+  const [pass, setPass]   = useState("");
+  const [error, setError] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  const handleLogin = () => {
+    if (user === AUTH_USER && pass === AUTH_PASS) {
+      sessionStorage.setItem(AUTH_KEY, "1");
+      onLogin();
+    } else {
+      setError(true);
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+    }
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#0a0c10", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+      <style>{\`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=DM+Mono:wght@400;700&display=swap');
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
+      \`}</style>
+      <div style={{
+        width: 380, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 16, padding: "40px 36px",
+        animation: shake ? "shake 0.4s ease" : "none",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
+          <div style={{ width: 32, height: 32, background: "linear-gradient(135deg, #e8c460, #b8860b)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#0a0c10" }}>K</div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: "#f9fafb", letterSpacing: -0.3 }}>Kave Home</div>
+            <div style={{ fontSize: 10, color: "#4b5563", letterSpacing: 1 }}>PERFORMANCE DASHBOARD</div>
+          </div>
+        </div>
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 10, color: "#4b5563", textTransform: "uppercase", letterSpacing: 2, fontWeight: 700, marginBottom: 6 }}>Usuario</div>
+          <input value={user} onChange={e => { setUser(e.target.value); setError(false); }}
+            onKeyDown={e => e.key === "Enter" && handleLogin()}
+            style={{ width: "100%", background: "#0f1117", border: "1px solid " + (error ? "rgba(239,68,68,0.4)" : "rgba(255,255,255,0.08)"), borderRadius: 8, color: "#f9fafb", padding: "10px 14px", fontSize: 13, outline: "none", boxSizing: "border-box" }}
+            placeholder="usuario" autoComplete="username" />
+        </div>
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ fontSize: 10, color: "#4b5563", textTransform: "uppercase", letterSpacing: 2, fontWeight: 700, marginBottom: 6 }}>Contraseña</div>
+          <input type="password" value={pass} onChange={e => { setPass(e.target.value); setError(false); }}
+            onKeyDown={e => e.key === "Enter" && handleLogin()}
+            style={{ width: "100%", background: "#0f1117", border: "1px solid " + (error ? "rgba(239,68,68,0.4)" : "rgba(255,255,255,0.08)"), borderRadius: 8, color: "#f9fafb", padding: "10px 14px", fontSize: 13, outline: "none", boxSizing: "border-box" }}
+            placeholder="••••••••••••" autoComplete="current-password" />
+        </div>
+        {error && <div style={{ fontSize: 12, color: "#ef4444", marginBottom: 16, textAlign: "center" }}>Usuario o contraseña incorrectos</div>}
+        <button onClick={handleLogin} style={{ width: "100%", background: "linear-gradient(135deg, #e8c460, #b8860b)", border: "none", borderRadius: 8, color: "#0a0c10", padding: "12px", fontSize: 13, fontWeight: 800, cursor: "pointer", letterSpacing: 0.5 }}>
+          ACCEDER
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+
 const SUPABASE_URL = "https://lgkotzadckfisvvoaiht.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxna290emFkY2tmaXN2dm9haWh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjQwMTEsImV4cCI6MjA5NDk0MDAxMX0.SgYOi-9kHjM1VHNWG2eMQcah4-ZoocmLhvmzftTYHaI";
 
@@ -170,7 +234,13 @@ const ChartTooltip = ({ active, payload, label }) => {
   );
 };
 
-export default function Dashboard() {
+export default function App() {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem("kh_auth") === "1");
+  if (!authed) return <LoginScreen onLogin={() => setAuthed(true)} />;
+  return <Dashboard />;
+}
+
+function Dashboard() {
   const [datePreset, setDatePreset] = useState("30d");
   const [fPlatform, setFPlatform]   = useState([]);
   const [fCountry, setFCountry]     = useState([]);
